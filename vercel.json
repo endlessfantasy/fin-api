@@ -12,7 +12,7 @@
     "dest": "main.py"
     },
     {
-    "src": "/stock",
+    "src": "/stock/",
     "dest": "main.py"
     },
     {
