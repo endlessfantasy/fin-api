@@ -12,11 +12,11 @@
     "dest": "main.py"
     },
     {
-    "src": "/stock/",
+    "src": "/stock/(.*)",
     "dest": "main.py"
     },
     {
-    "src": "/stock-data/",
+    "src": "/stock-data",
     "dest": "main.py"
     }
     ]
