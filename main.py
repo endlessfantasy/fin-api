@@ -8,7 +8,7 @@ app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"], 
-    allow_methods=["*"], 
+    allow_methods=["GET"], 
     allow_headers=["*"], 
 )
 
@@ -17,11 +17,11 @@ async def root():
     return {"message": "Hello World"}
 
 @app.get("/stock/{symbol}")
-def get_info(symbol: str):
+async def get_info(symbol: str):
     return get_stock_info(symbol)
 
 @app.get("/stock-data/")
-def get_data(stock: str, days: int, interval: str = "1d"):
+async def get_data(stock: str, days: int, interval: str = "1d"):
     return get_stock_data(stock, days, interval)
 
 
