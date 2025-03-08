@@ -20,7 +20,7 @@ async def root():
 async def get_info(symbol: str):
     return get_stock_info(symbol)
 
-@app.get("/stock-data/")
+@app.get("/stock-data")
 async def get_data(stock: str, days: int, interval: str = "1d"):
     return get_stock_data(stock, days, interval)
 
