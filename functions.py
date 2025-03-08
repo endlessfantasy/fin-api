@@ -49,4 +49,4 @@ def get_stock_data(symbol: str, days: int = 1, interval: str = "1d"):
         return {"stock": symbol.upper(), "interval": interval, "data": stock_data}
 
     except Exception as e:
-        return {"error": str(e)}
+        return {"error": "INVALID REQUEST. CHECK TRADING SYMBOL"}
