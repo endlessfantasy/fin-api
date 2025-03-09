@@ -34,7 +34,7 @@ async def get_fake_data(
     volatility: float = 0.01,
     drift: float = 0.0005,
     volume_mean: int = 10000000,
-    interval: str = "1D",
+    interval: str = "1d",
     random_seed: int = None,
     start_date: str = "2023-01-01"
 ):
