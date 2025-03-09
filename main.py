@@ -14,7 +14,8 @@ app.add_middleware(
 
 @app.get("/")
 async def root():
-    return {"message": "Hello World"}
+    return {"message": "API for Financial Rougelike Simulation by Team NexusCode",
+            "status": "ACTIVE"}
 
 @app.get("/stock/{symbol}")
 async def get_info(symbol: str):
