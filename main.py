@@ -27,7 +27,7 @@ async def get_data(stock: str, days: int, interval: str = "1d"):
 
 @app.get("/fakestockdata")
 async def get_fake_data(
-    symbol: str = "TIC",
+    stock: str = "TIC",
     company_name: str = "Test Inc",
     start_price: float = 100.0,
     end_price: float = None,
@@ -41,10 +41,10 @@ async def get_fake_data(
 ):
     turning_points = None  # GET requests cannot send a JSON body directly
     
-    fake_data = await generate_stock_data(symbol, company_name, start_price, end_price, days, 
+    fake_data = await generate_stock_data(stock, company_name, start_price, end_price, days, 
                                     volatility, drift, volume_mean, interval, 
                                     random_seed, turning_points, start_date)
-    return {"stock": symbol, "interval": interval, "data": fake_data}
+    return {"stock": stock, "interval": interval, "data": fake_data}
 
 if __name__ == "__main__":
     import uvicorn

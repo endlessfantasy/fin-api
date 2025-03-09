@@ -44,7 +44,7 @@ GET /stock-data?stock=AAPL&days=5&interval=1h
   "data": [
     {
       "symbol": "AAPL",
-      "company_name": "Apple Inc.",
+      "company_name": "Test Inc.",
       "current_price": 145.3,
       "change": 2.1,
       "change_percent": 1.47,
@@ -81,7 +81,7 @@ GET /fakestockdata
 
 **Example Request:**
 ```http
-GET /stock-data?stock=AAPL&days=5&interval=1h
+GET /fakestockdata?stock=AAPL&days=5&interval=1h
 ```
 
 **Example Response:**
@@ -107,3 +107,9 @@ GET /stock-data?stock=AAPL&days=5&interval=1h
   }
 ```
 Note: The time stamp does not contain the timezone
+
+<br>
+
+# TODO:
+- Add error handling using pydantic
+- Generate news articles and add it to the response body

@@ -82,25 +82,43 @@ async def generate_stock_data(
     if interval not in INTERVAL_MAP:
         raise ValueError(f"Invalid interval '{interval}'. Choose from {list(INTERVAL_MAP.keys())}")
     
+    # Calculate the total number of intervals based on the interval and days
+    if interval.endswith("m"):
+        minutes = int(interval[:-1])
+        intervals_per_day = 24 * 60 // minutes
+    elif interval.endswith("h"):
+        hours = int(interval[:-1])
+        intervals_per_day = 24 // hours
+    elif interval.endswith("d"):
+        intervals_per_day = 1
+    elif interval.endswith("wk"):
+        intervals_per_day = 1 / 7
+    elif interval.endswith("mo"):
+        intervals_per_day = 1 / 30  # Approximation
+    else:
+        raise ValueError(f"Unsupported interval: {interval}")
+    
+    total_intervals = int(days * intervals_per_day)
+    
     freq = INTERVAL_MAP[interval]
-    date_range = pd.date_range(start=start_date, periods=days, freq=freq)
-    stock_prices = np.zeros(days)
+    date_range = pd.date_range(start=start_date, periods=total_intervals, freq=freq)
+    stock_prices = np.zeros(total_intervals)
     stock_prices[0] = start_price
     
     if end_price:
-        drift = (end_price / start_price) ** (1 / days) - 1  # Adjust drift
+        drift = (end_price / start_price) ** (1 / total_intervals) - 1  # Adjust drift
     
-    for i in range(1, days):
+    for i in range(1, total_intervals):
         daily_return = np.random.normal(drift, volatility)
         stock_prices[i] = stock_prices[i - 1] * (1 + daily_return)
     
     if turning_points:
         for day, price in turning_points.items():
-            if 0 <= day < days:
+            if 0 <= day < total_intervals:
                 stock_prices[day] = price
     
     data = []
-    for i in range(days):
+    for i in range(total_intervals):
         open_price = stock_prices[i] * (1 + np.random.uniform(-0.005, 0.005))
         high_price = open_price * (1 + np.random.uniform(0.001, 0.01))
         low_price = open_price * (1 - np.random.uniform(0.001, 0.01))
@@ -109,7 +127,7 @@ async def generate_stock_data(
         change = close_price - previous_close
         change_percent = (change / previous_close) * 100
         volume = int(np.random.normal(volume_mean, volume_mean * 0.1))
-        timestamp = date_range[i].strftime("%Y-%m-%dT%H:%M:%SZ") # no timezone
+        timestamp = date_range[i].strftime("%Y-%m-%dT%H:%M:%SZ")  # No timezone
 
         data.append({
             "symbol": symbol,
