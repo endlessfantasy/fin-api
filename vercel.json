@@ -18,6 +18,10 @@
     {
     "src": "/stock-data",
     "dest": "main.py"
+    },
+    {
+    "src": "/fakestockdata",
+    "dest": "main.py"
     }
     ]
     }

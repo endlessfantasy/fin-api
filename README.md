@@ -23,7 +23,7 @@ GET /
 
 ### Get Stock Historical Data
 ```http
-GET /stock-data/
+GET /stock-data
 ```
 **Query Parameters:**
 - `stock` (string, required) - Stock ticker symbol (e.g., `AAPL`).
@@ -56,4 +56,9 @@ GET /stock-data/?stock=AAPL&days=5&interval=1h
     }
   ]
 }
+```
+
+### Generate Fake Stock Historical Data
+```http
+GET /fakestockdata
 ```

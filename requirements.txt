@@ -3,13 +3,18 @@
 annotated-types==0.7.0
     # via pydantic
 anyio==4.8.0
-    # via starlette
+    # via
+    #   httpx
+    #   starlette
 beautifulsoup4==4.13.3
     # via
     #   gdg-project (pyproject.toml)
     #   yfinance
 certifi==2025.1.31
-    # via requests
+    # via
+    #   httpcore
+    #   httpx
+    #   requests
 charset-normalizer==3.4.1
     # via requests
 click==8.1.8
@@ -19,10 +24,17 @@ fastapi==0.115.11
 frozendict==2.4.6
     # via yfinance
 h11==0.14.0
-    # via uvicorn
+    # via
+    #   httpcore
+    #   uvicorn
+httpcore==1.0.7
+    # via httpx
+httpx==0.28.1
+    # via gdg-project (pyproject.toml)
 idna==3.10
     # via
     #   anyio
+    #   httpx
     #   requests
 lxml==5.3.1
     # via gdg-project (pyproject.toml)
@@ -38,8 +50,12 @@ pandas==2.2.3
     #   yfinance
 peewee==3.17.9
     # via yfinance
+pip==25.0.1
+    # via gdg-project (pyproject.toml)
 platformdirs==4.3.6
     # via yfinance
+psycopg2-binary==2.9.10
+    # via gdg-project (pyproject.toml)
 pydantic==2.10.6
     # via fastapi
 pydantic-core==2.27.2
