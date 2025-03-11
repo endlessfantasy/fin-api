@@ -96,22 +96,22 @@ GET /fakestockdata?stock=AAPL&days=5&interval=1h
       "current_price": 151.23,
       "change": 1.45,
       "change_percent": 0.97,
-      "open": 150.50,
-      "high": 152.00,
-      "low": 149.80,
+      "open": 150.5,
+      "high": 152,
+      "low": 149.8,
       "previous_close": 149.78,
       "volume": 5200000,
       "timestamp": "2024-03-01T10:30:00Z"
-    },
-    "news" : [
-      {
-        "date" : "January 15th",
-        "headline" : "Mixed Economic Data Creates Uncertainty",
-        "arcitle" : "Economic indicators present a mixed picture, leading to market volatility. Concerns about inflation persist despite positive jobs data. Experts suggest a cautious approach, recommending diversification across sectors."
-      }
-    ]
+    }
+  ],
+  "news": [
+    {
+      "date": "January 15th",
+      "headline": "Mixed Economic Data Creates Uncertainty",
+      "article": "Economic indicators present a mixed picture, leading to market volatility. Concerns about inflation persist despite positive jobs data. Experts suggest a cautious approach, recommending diversification across sectors."
+    }
   ]
-  }
+}
 ```
 Note: The time stamp does not contain the timezone
 
@@ -120,3 +120,5 @@ Note: The time stamp does not contain the timezone
 # TODO:
 - Add error handling using pydantic
 - Improve the news article generation
+- High amount of data processing is causing timeout issues
+- PLOTTING SO MUCH DATA THAT IT MAY NOT BE POSSIBLE TO SEE DETAILS (Candles, Ohlc-Bars, Etc.) AND TEXT MAY OVERLAP. Maybe use line chart instead.
