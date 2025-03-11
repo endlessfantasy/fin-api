@@ -81,7 +81,7 @@ GET /fakestockdata
 
 **Example Request:**
 ```http
-GET fakestockdata?stock=AAPL&days=1&interval=1d
+GET /fakestockdata?stock=AAPL&days=1&interval=1d
 ```
 
 **Example Response:**
