@@ -102,7 +102,14 @@ GET /fakestockdata?stock=AAPL&days=5&interval=1h
       "previous_close": 149.78,
       "volume": 5200000,
       "timestamp": "2024-03-01T10:30:00Z"
-    }
+    },
+    "news" : [
+      {
+        "date" : "January 15th",
+        "headline" : "Mixed Economic Data Creates Uncertainty",
+        "arcitle" : "Economic indicators present a mixed picture, leading to market volatility. Concerns about inflation persist despite positive jobs data. Experts suggest a cautious approach, recommending diversification across sectors."
+      }
+    ]
   ]
   }
 ```
@@ -112,4 +119,4 @@ Note: The time stamp does not contain the timezone
 
 # TODO:
 - Add error handling using pydantic
-- Generate news articles and add it to the response body
+- Improve the news article generation
