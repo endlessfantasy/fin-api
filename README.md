@@ -81,34 +81,39 @@ GET /fakestockdata
 
 **Example Request:**
 ```http
-GET /fakestockdata?stock=AAPL&days=5&interval=1h
+GET fakestockdata?stock=AAPL&days=1&interval=1d
 ```
 
 **Example Response:**
 ```json
 {
   "stock": "AAPL",
-  "interval": "1h",
+  "interval": "1d",
   "data": [
     {
       "symbol": "AAPL",
-      "company_name": "Apple Inc.",
-      "current_price": 151.23,
-      "change": 1.45,
-      "change_percent": 0.97,
-      "open": 150.5,
-      "high": 152,
-      "low": 149.8,
-      "previous_close": 149.78,
-      "volume": 5200000,
-      "timestamp": "2024-03-01T10:30:00Z"
+      "company_name": "Test Inc",
+      "current_price": 100.0,
+      "change": 0.0,
+      "change_percent": 0.0,
+      "open": 99.94,
+      "high": 100.11,
+      "low": 99.41,
+      "previous_close": 100.0,
+      "volume": 9775082,
+      "timestamp": "2023-01-01T00:00:00Z"
     }
   ],
   "news": [
     {
       "date": "January 15th",
-      "headline": "Mixed Economic Data Creates Uncertainty",
-      "article": "Economic indicators present a mixed picture, leading to market volatility. Concerns about inflation persist despite positive jobs data. Experts suggest a cautious approach, recommending diversification across sectors."
+      "headline": "Trading Volume Skyrockets Amidst Market Optimism",
+      "article": "A surge in trading volume was observed today, fueled by positive sentiment surrounding upcoming earnings reports. Investors are eagerly anticipating the release of key financial data, leading to increased activity in the market. Some analysts are predicting a continuation of this trend as more companies announce their results in the coming weeks."
+    },
+    {
+      "date": "February 22nd",
+      "headline": "Market Holds Steady Despite Mixed Economic Data",
+      "article": "The market remained relatively stable today, despite the release of mixed economic indicators. While consumer confidence showed signs of improvement, concerns linger regarding inflation and potential interest rate hikes. Experts suggest that investors are adopting a wait-and-see approach as they assess the overall economic outlook."
     }
   ]
 }
