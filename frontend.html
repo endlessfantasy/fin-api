@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Financial Trading Simulator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://cdn.plot.ly/plotly-3.0.1.min.js" charset="utf-8"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+    header, main {
+      padding: 10px;
+    }
+    header {
+      background-color: #333;
+      color: #fff;
+      text-align: center;
+    }
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      padding: 10px;
+    }
+    #chart {
+      flex: 1 1 600px;
+      min-width: 300px;
+      height: 500px;
+    }
+    .panel {
+      flex: 1 1 300px;
+      min-width: 250px;
+      border: 1px solid #ddd;
+      padding: 10px;
+      box-sizing: border-box;
+    }
+    .panel h2 {
+      margin-top: 0;
+    }
+    button {
+      margin: 5px 5px 5px 0;
+      padding: 8px 12px;
+      cursor: pointer;
+    }
+    /* Add scrollbar for news panel */
+    #news-panel {
+      max-height: 500px;
+      overflow-y: scroll;
+    }
+    .news-item {
+      margin-bottom: 15px;
+      border-bottom: 1px dashed #ccc;
+      padding-bottom: 10px;
+    }
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Financial Trading Simulator</h1>
+  </header>
+  <main class="container">
+    <div id="chart"></div>
+    
+    <!-- Trading Panel -->
+    <div class="panel" id="trading-panel">
+      <h2>Trading Panel</h2>
+      <p><strong>Balance:</strong> $<span id="balance">10000.00</span></p>
+      <p><strong>Shares Held:</strong> <span id="shares">0</span></p>
+      <p><strong>Current Price:</strong> $<span id="current-price">0.00</span></p>
+      <p><strong>Portfolio Value:</strong> $<span id="portfolio">10000.00</span></p>
+      <p><strong>Profit/Loss:</strong> $<span id="profit-loss">0.00</span></p>
+      <button id="start-btn">Start Simulation</button>
+      <button id="buy-btn" disabled>Buy 1 Share</button>
+      <button id="sell-btn" disabled>Sell 1 Share</button>
+      <button id="pause-btn" disabled>Pause Simulation</button>
+      <div id="message" style="color: red;"></div>
+    </div>
+
+    <!-- News Panel -->
+    <div class="panel" id="news-panel">
+      <h2>News</h2>
+      <!-- News items will be appended here as the simulation advances -->
+    </div>
+  </main>
+
+  <script>
+    // Starting portfolio variables
+    const initialBalance = 10000;
+    let balance = initialBalance;
+    let shares = 0;
+    let currentPrice = 0;
+    let paused = false; // flag to track pause/resume state
+    let updateInterval;
+
+    // Function to update trading panel display
+    function updatePanel() {
+      document.getElementById('balance').innerText = balance.toFixed(2);
+      document.getElementById('shares').innerText = shares;
+      document.getElementById('current-price').innerText = currentPrice.toFixed(2);
+      const portfolioValue = balance + shares * currentPrice;
+      document.getElementById('portfolio').innerText = portfolioValue.toFixed(2);
+      const profitLoss = portfolioValue - initialBalance;
+      document.getElementById('profit-loss').innerText = profitLoss.toFixed(2);
+    }
+
+    // Handlers for Buy and Sell buttons
+    document.getElementById('buy-btn').addEventListener('click', () => {
+      if (balance >= currentPrice) {
+        balance -= currentPrice;
+        shares += 1;
+        document.getElementById('message').innerText = "";
+      } else {
+        document.getElementById('message').innerText = "Insufficient balance to buy.";
+      }
+      updatePanel();
+    });
+
+    document.getElementById('sell-btn').addEventListener('click', () => {
+      if (shares > 0) {
+        balance += currentPrice;
+        shares -= 1;
+        document.getElementById('message').innerText = "";
+      } else {
+        document.getElementById('message').innerText = "No shares available to sell.";
+      }
+      updatePanel();
+    });
+
+    // Pause/Resume button handler
+    document.getElementById('pause-btn').addEventListener('click', () => {
+      paused = !paused;
+      document.getElementById('pause-btn').innerText = paused ? 'Resume Simulation' : 'Pause Simulation';
+    });
+
+    // Function to display a news article in the news panel
+    function displayNewsArticle(article) {
+      const newsPanel = document.getElementById('news-panel');
+      const newsItem = document.createElement('div');
+      newsItem.className = 'news-item';
+      const headline = document.createElement('h3');
+      headline.innerText = article.headline;
+      const datePara = document.createElement('p');
+      datePara.innerHTML = `<em>${article.date}</em>`;
+      const content = document.createElement('p');
+      content.innerText = article.article;
+      newsItem.appendChild(headline);
+      newsItem.appendChild(datePara);
+      newsItem.appendChild(content);
+      newsPanel.appendChild(newsItem);
+    }
+
+    // Function to start the simulation (perform API call and set up chart)
+    function startSimulation() {
+      // Disable the Start Simulation button and enable trading controls
+      document.getElementById('start-btn').disabled = true;
+      document.getElementById('buy-btn').disabled = false;
+      document.getElementById('sell-btn').disabled = false;
+      document.getElementById('pause-btn').disabled = false;
+
+      // Fetch fake stock data with CORS enabled and plot the price chart
+      const api_url = 'https://fin-api-three.vercel.app/fakestockdata?stock=AAPL&days=360&interval=1d';
+
+      fetch(api_url, { mode: 'cors' })
+        .then(response => response.json())
+        .then(data => {
+          const dates = data.data.map(d => d.timestamp);
+          const prices = data.data.map(d => d.current_price);
+
+          // Determine thresholds for news articles if provided
+          let newsArticles = [];
+          if (data.news && Array.isArray(data.news)) {
+            newsArticles = data.news.map((article, idx) => {
+              return {
+                ...article,
+                threshold: Math.floor((idx + 1) * dates.length / (data.news.length + 1)),
+                displayed: false
+              };
+            });
+          }
+
+          // Plot only one-twelfth of the data initially
+          const initialDataLength = Math.floor(dates.length / 12);
+          const initialDates = dates.slice(0, initialDataLength);
+          const initialPrices = prices.slice(0, initialDataLength);
+
+          // Set the current price from the last initial value
+          currentPrice = initialPrices[initialPrices.length - 1];
+          updatePanel();
+
+          const plotDiv = document.getElementById('chart');
+          const plot = {
+            data: [
+              {
+                x: initialDates,
+                y: initialPrices,
+                type: 'scatter',
+                mode: 'lines',
+                name: 'AAPL Stock Price'
+              }
+            ],
+            layout: {
+              title: 'AAPL Stock Price',
+              xaxis: { title: 'Date' },
+              yaxis: { title: 'Price' },
+              margin: { t: 50, r: 30, b: 50, l: 50 }
+            }
+          };
+
+          Plotly.newPlot(plotDiv, plot.data, plot.layout);
+
+          // Update the chart and current price every 2 seconds using setInterval
+          let currentIndex = initialDataLength;
+          updateInterval = setInterval(() => {
+            // If simulation is paused, skip this update cycle
+            if (paused) return;
+            
+            const newDates = dates.slice(currentIndex, currentIndex + 10);
+            const newPrices = prices.slice(currentIndex, currentIndex + 10);
+
+            // Stop the interval if we've reached the end
+            if (newDates.length === 0) {
+              clearInterval(updateInterval);
+              return;
+            }
+
+            // Update currentPrice to the last value from the new chunk
+            currentPrice = newPrices[newPrices.length - 1];
+            updatePanel();
+
+            // Append new data to the chart
+            plot.data[0].x = plot.data[0].x.concat(newDates);
+            plot.data[0].y = plot.data[0].y.concat(newPrices);
+            Plotly.update(plotDiv, plot.data, plot.layout);
+
+            // Check and display news articles if thresholds are reached
+            newsArticles.forEach(article => {
+              if (!article.displayed && currentIndex >= article.threshold) {
+                displayNewsArticle(article);
+                article.displayed = true;
+              }
+            });
+
+            currentIndex += 10;
+          }, 2000);
+        })
+        .catch(error => console.error(error));
+    }
+
+    // Start simulation when the Start Simulation button is clicked
+    document.getElementById('start-btn').addEventListener('click', startSimulation);
+  </script>
+</body>
+</html>

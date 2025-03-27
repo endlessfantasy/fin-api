@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from starlette.responses import FileResponse
 
 from functions import (generate_stock_data, get_news, get_stock_data,
                        get_stock_info,
@@ -17,11 +18,8 @@ app.add_middleware(
 
 
 @app.get("/")
-async def root():
-    return {
-        "message": "API for Financial Rougelike Simulation by Team NexusCode",
-        "status": "ACTIVE",
-    }
+async def start_simulation():
+    return FileResponse('frontend.html')
 
 
 @app.get("/stock/{symbol}")

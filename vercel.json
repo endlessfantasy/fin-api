@@ -22,6 +22,10 @@
     {
     "src": "/fakestockdata",
     "dest": "main.py"
+    },
+    {
+        "src": "/docs",
+        "dest": "main.py"
     }
     ]
     }
