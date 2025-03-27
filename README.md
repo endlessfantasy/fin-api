@@ -13,13 +13,7 @@ This is a FastAPI-based stock data API that retrieves stock information and hist
 ```http
 GET /
 ```
-**Response:**
-```json
-{
-  "message": "API for Financial Rougelike Simulation by Team NexusCode",
-  "status": "ACTIVE"
-}
-```
+Simulation Page
 
 
 ### Get Stock Historical Data
